@@ -1,30 +1,77 @@
-The dashboard's goal is to present a quick overview over a large number of stroke quality care data for clincians spread across several pages (horizontal top bar navigation) 
-This includes numeric and categorical parameters. 
-![QI Real Data](Images/Update_29_06.png)
+# Dashboard - Hospital Stroke Care Quality
 
-To get to this goal a modular restructuring had to be done for the code and now the architecture looks as following:
-![Code Architecture](Images/Architecture_08_07.png)
-
-Notice how the annotated screenshot and the architecture tie together:
-
-1 - For students or future developers wishing to change the visuals, you want to tinker with the modules rowmaker_Num & rowmaker_Cat. These two functions are the ones rendering the plots, if you want to alter how the plots look then focus on the output$vis as this is where the plot is generated. Should there be a to change how the imported data is handled, this must be done in the dataHandlerQI.R file. This is the function the rowmaker modules call to retrieve the data needed to plot the graphs.
-
-2 - For the goal of expanding the functionality of the expanded view. Take a look at the expanded_Plot file, this is where the current code is for that section. For now it's a placeholder so all of it might be scraped depending on what functionality is desired there. Consider looking at the action buttons in the rowmaker files if interaction is necessary between the QI's and the expanded view.
-
-3 - Lastly, if we want to expand on the dashboard can do so by editting on the QI_Info excel sheet (for adding more QI's) or edit the dashboard_structure, page_Generic & page_PC/HO if ideas come about regarding how these should look and what functionalities they have.
-
-
-The current dashboard applications looks like and has the functionality shown by the following:
+A prototype dashboard developed during my data science internship at Aalborg University Human Machine Interaction group to allow hospitals to monitor and visualise stroke care quality indicators.
 ![Gif of current dashboard](Images/Update_08_07.gif)
 
-It generates these plots and metrics by loading from sample anonymised hospital data. The anynomised hospital data is called dataREanonymized ask Hendrik or Mathias for permission for this file (in csv format), it cannot be uploaded here as it contains sensitive hospital data. If we want to change how the data is imported, look at the function called dataLoader under the utils folder.
+## Problem Statement
 
-This hospital data has properties which can be found in [here](https://docs.google.com/spreadsheets/d/1MrhG4S0lIzMI6-J7iiURH5LDJ0fAl3RoqFwqMTxXiCY/edit#gid=2086406418) under the data columns category, there you can see for each column how much missing data there is and what type of data each column has (categorical or numeric).
+Stroke care quality data is crucial for determining the quality of hospital care for stroke patients. Yet, with large volumes of data, experts often struggle to identify key insights as the signal can be buried in the noise.
 
-Furthermore it makes use of the QI_Info to load certain QI's with their corresponding visualisations, abbreviations and the column the QI needs to extract the information from. Note the dashboard does not currently load the patient characteristics or hospital overview as these tabs are likely to look completely different than the others.
+Dashboards address this challenge by providing at-a-glance visualisations that highlight the most important metrics and trends. The task is to develop a dashboard prototype displaying stroke care quality indicators (QIs) subject to the following criteria:
 
+1. It will contain a set of QIs defined by medical experts as necessary for stroke care
+2. The QIs will be aggregated per hospital per quarter
+3. Numerical indicators will be visualised on a quarterly trendline
+4. Categorical indicators will be visualised on a stacked bar graph
+
+## Data Description
+
+The dataset was provided by [RES-Q+](https://www.resqplus.eu/), an organization that collects and manages stroke care quality data worldwide. Its goal is to give hospitals a centralized registry where they can monitor and compare stroke care trends within and across countries, ultimately supporting improvements in stroke treatment quality.
+
+The dataset consisted of data from nine different hospitals in 3 different countries. Each entry, logged by hospital staff for stroke patients, included 270 columns, resulting in 80k+ entries.
+As is common with real-world datasets, pre-processing was required to handle missing and erroneous entries. Missing values were flagged as 'NA' (Not Available). Erroneous entries were removed by detecting and excluding extreme outliers in columns where outlier detection was straightforward, such as patient age.
+
+#### Data Transformation
+
+For future aggregation, the data was transformed into two different tabular data structures:
+
+1. numVars: containing the numerical data
+2. catVars: containing the categorical data
+
+These are shown in the figure below.
+![Numerical and categorical data structures](Images/dataStructures.png)
+
+## Metric Aggregation
+
+The dataset had to be aggregated into 128 quality indicators (QIs) across 7 categories as seen in the table below. The aggregation functions were mostly the mean/median for numerical QIs and percentage breakdowns for categorical QIs.
+
+| Category                   | Number of QIs | Numerical | Categorical |
+| -------------------------- | ------------- | --------- | ----------- |
+| Patient Characteristics    | 45            | 7         | 38          |
+| Bleeding                   | 9             | 0         | 9           |
+| Imaging                    | 10            | 4         | 6           |
+| Treatment                  | 18            | 6         | 12          |
+| Phase One (initial 3 days) | 12            | 0         | 12          |
+| Discharge                  | 20            | 3         | 17          |
+| ESO Angel Awards           | 10            | 10        | 0           |
+
+In order to map the columns to QIs, preliminary mappings were defined. These were constructed based on my judgement and research pending medical expert confirmation, as the dataset did not come with a QI mapping of its own. It was colour coded to signify the correctness likelihood of the mapping, where:
+- Green: Most likely true
+- Orange: Uncertain
+- Yellow: Can be constructed from several columns
+- Teal: Can be constructed through logic between columns
+- White: Unknown
+
+![QI Mapping](Images/prelimMapping.png)
+
+#### Visualisations
+
+Visualisations followed the requirements. When quarterly data was missing (some hospitals were more up to date than others), the country aggregate was used instead and a red visual indicator was given to demonstrate missing quarterly data. Stakeholders can immediately identify missing quarterly data (red flag indicator).
+![Quarterly data missing](Images/flagMissing.png)
+
+#### QI ↔ Data Interface Abstraction
+
+In order to promote modularity and easy onboarding of future QIs, I created an interface between an excel sheet and the data aggregation logic. The interface parsed the excel sheet so that future QIs were easily added even by non-technical stakeholders. A screenshot of how it looked is given below.
 ![QI Info](Images/QI_Info.png)
 
-Should we want to add more QI's we can simply add an entree to the QI_Info excel sheet with specific visualisation, abbreviation, indicator name and column name from which it must be constructed it will do so automatically (With the exception of patient characteristics and hospital overview).
+## Architecture
 
+The dashboard app is built using R Shiny. It consists of two layers:
 
+1. A UI layer → handles layout and visualisation components
+2. A server layer → manages data aggregation, processing and dynamic updates based on user interactions
+
+The relation between the code architecture and the dashboard are illustrated below. The first diagram demonstrates the overall code architecture, mapping modules and data flow to the dashboard components. The second image shows how real QI data is rendered in the dashboard.
+![Code Architecture](Images/Architecture_08_07.png)
+
+![QI Real Data](Images/Update_29_06.png)
