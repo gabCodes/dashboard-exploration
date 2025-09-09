@@ -33,7 +33,7 @@ These are shown in the figure below.
 
 ## Metric Aggregation
 
-The dataset had to be aggregated into 128 quality indicators (QIs) across 7 categories as seen in the table below. The aggregation functions were mostly the mean/median for numerical QIs and percentage breakdowns for categorical QIs.
+The dataset was aggregated into 128 quality indicators (QIs) across 7 categories, as shown in the table below. Aggregation functions were primarily mean/median for numerical QIs and percentage breakdowns for categorical QIs. Each QI was calculated quarterly, both at the hospital level and at the country-wide level.
 
 <div align="center">
 
