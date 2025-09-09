@@ -18,7 +18,7 @@ Dashboards address this challenge by providing at-a-glance visualisations that h
 
 The dataset was provided by [RES-Q+](https://www.resqplus.eu/), an organization that collects and manages stroke care quality data worldwide. Its goal is to give hospitals a centralized registry where they can monitor and compare stroke care trends within and across countries, ultimately supporting improvements in stroke treatment quality.
 
-The dataset consisted of anonymised data from nine different hospitals in 3 different countries. Each entry, logged by hospital staff for stroke patients, included 270 columns, resulting in 80k+ entries.
+The dataset consisted of anonymised data from nine different hospitals in three different countries. Each entry, logged by hospital staff for stroke patients, included 270 columns, resulting in 80k+ entries.
 As is common with real-world datasets, pre-processing was required to handle missing and erroneous entries. Missing values were flagged as 'NA' (Not Available). Erroneous entries were removed by detecting and excluding extreme outliers in columns where outlier detection was straightforward, such as patient age.
 
 #### Data Transformation
