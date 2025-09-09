@@ -35,6 +35,8 @@ These are shown in the figure below.
 
 The dataset had to be aggregated into 128 quality indicators (QIs) across 7 categories as seen in the table below. The aggregation functions were mostly the mean/median for numerical QIs and percentage breakdowns for categorical QIs.
 
+<div align="center">
+
 | Category                   | Number of QIs | Numerical | Categorical |
 | -------------------------- | ------------- | --------- | ----------- |
 | Patient Characteristics    | 45            | 7         | 38          |
@@ -44,6 +46,8 @@ The dataset had to be aggregated into 128 quality indicators (QIs) across 7 cate
 | Phase One (initial 3 days) | 12            | 0         | 12          |
 | Discharge                  | 20            | 3         | 17          |
 | ESO Angel Awards           | 10            | 10        | 0           |
+
+</div>
 
 In order to map the columns to QIs, preliminary mappings were defined. These were constructed based on my judgement and research pending medical expert confirmation, as the dataset did not come with a QI mapping of its own. It was colour coded to signify the correctness likelihood of the mapping, where:
 - Green: Most likely true
